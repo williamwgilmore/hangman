@@ -10,7 +10,7 @@
 		<h3 class = "redo"></h3>
 		<h3 class = "guessedLetter"></h3>
 		<h3 class = "score"></h3>
-		<h3 class = "finalMessage"></h3>
+		<h3 class = "finalMessage">Press any letter to begin</h3>
 		<script type="text/javascript">
 			//-----------------------------------------------------
 			//Select and store the current word
@@ -127,10 +127,16 @@
 					//-------------------------------------------------------------
 					//When a key is pressed, check several things using the functions above.
 					document.onkeyup = function(event) {
+
 						//start a new game if a game has just ended
 						if (startGame){
 							newGame();
 						}
+
+						//Clears the redo field
+						document.querySelector(".redo").innerHTML = "";
+
+
 						//makes sure key hit was a lowercase letter, and not already guessed
 						checkGuess(event.key);
 
