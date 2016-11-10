@@ -1,7 +1,8 @@
 <DOCTYPE html>
 <html>
 	<head>
-		<title></title>
+		<title>Hangman</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	</head>
 	<body>
 		<h3 class = "displayWord"></h3>
@@ -26,7 +27,7 @@
 			};
 			//-------------------------------------------------------
 			//Dislplay the current word, dashes first then the guessed letters
-			//now also shows guessed letter bank and score
+			//now also shows guessed letter bank
 
 			var wordArray = [];
 			var guessedArray = [];
@@ -35,7 +36,6 @@
 			var showWord = function(){
 				document.querySelector(".displayWord").innerHTML = guessedArray.join(" ");
 				document.querySelector(".guessedLetter").innerHTML = guessedBank.join(" ");
-				document.querySelector(".score").innerHTML = "Wins: " + win + " Losses: " + lose;
 				document.querySelector(".livesRemaining").innerHTML = "Lives: " + lives;
 			};
 			//-------------------------------------------------------
@@ -75,8 +75,8 @@
 						for (var l=0; l<guessedBank.length; l++){
 								if (guess === guessedBank[l]){
 									document.querySelector(".redo").innerHTML = "You have already guessed: " + guess;
-									console.log("already there");
 									duplicateGuess = true;
+									console.log("already there");
 									break;
 									}
 								}
@@ -99,7 +99,8 @@
 								correct = true;
 							}
 						}
-						if (!correct){
+						if (!correct && !duplicateGuess){
+							console.log(correct + duplicateGuess);
 							lives--;
 						}
 					}
@@ -110,6 +111,7 @@
 							startGame = true;
 							win++;
 							document.querySelector(".finalMessage").innerHTML = "You win!" + "</br>" + "Press any letter to start again.";
+							document.querySelector(".score").innerHTML = "Wins: " + win + " Losses: " + lose;
 						}
 					}
 					//-------------------------------------------------------------
@@ -119,6 +121,7 @@
 							startGame = true;
 							lose++;
 							document.querySelector(".finalMessage").innerHTML = "You lose! The word was " + currentWord + "." + "</br>" + "Press any letter to start again.";
+							document.querySelector(".score").innerHTML = "Wins: " + win + " Losses: " + lose;
 						}
 					}
 					//-------------------------------------------------------------
