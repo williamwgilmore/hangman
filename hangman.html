@@ -1,0 +1,152 @@
+<DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+	</head>
+	<body>
+		<h3 class = "displayWord"></h3>
+		<h3 class = "livesRemaining"></h3>
+		<h3 class = "redo"></h3>
+		<h3 class = "guessedLetter"></h3>
+		<h3 class = "score"></h3>
+		<h3 class = "finalMessage"></h3>
+		<script type="text/javascript">
+			//-----------------------------------------------------
+			//Select and store the current word
+			//Bank of guessable words
+			var wordBank = ["back", "separate", "efficient", "reduce", "overflow", "spoon", "fang", "land", "previous", "acrid", "waggish", "blot", "foolish", "plastic", "accidental", "support", "wicked", "practice", "gusty", "actor", "temporary", "morning", "worthless", "vengeful", "expand", "quickest", "encourage", "steer", "touch", "dream"];
+			//Word that is being guessed
+			var currentWord = "blue";
+			var win = 0;
+			var lose = 0;
+			//-----------------------------------------------------------
+			//Select the word to guess, called when new game is started
+			var wordSelect = function(){
+				currentWord = wordBank[Math.floor(Math.random()*30)];
+			};
+			//-------------------------------------------------------
+			//Dislplay the current word, dashes first then the guessed letters
+			//now also shows guessed letter bank and score
+
+			var wordArray = [];
+			var guessedArray = [];
+			var lives= 0;
+
+			var showWord = function(){
+				document.querySelector(".displayWord").innerHTML = guessedArray.join(" ");
+				document.querySelector(".guessedLetter").innerHTML = guessedBank.join(" ");
+				document.querySelector(".score").innerHTML = "Wins: " + win + " Losses: " + lose;
+				document.querySelector(".livesRemaining").innerHTML = "Lives: " + lives;
+			};
+			//-------------------------------------------------------
+			//Sets up the game.
+			//Lives reset, clears the reset, puts the word into the wordArray, and fills the guessedArray with the appropriate number of _
+			
+			var startGame = true;
+			var newGame = function(){
+				lives = 10;
+				startGame = false;
+				guessedArray = [];
+				wordArray =[];
+				guessedBank= [];
+				wordSelect();
+				for (var i=0; i < currentWord.length; i++){
+					wordArray.push(currentWord.charAt(i));
+				};
+				for (var i=0; i <currentWord.length; i++){
+					guessedArray.push("_");
+				}
+				document.querySelector(".displayWord").innerHTML = guessedArray.join(" ");
+				document.querySelector(".finalMessage").innerHTML = "";
+			};
+			//an array that keeps track of letters guessed
+			var guessedBank = ["a"];
+			var alphabet = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
+			//takes the user's input and stores it
+			var currentGuess;
+			//This will be set to true if the user already geussed the letter, it will skip further steps
+			var duplicateGuess = false;
+			//------------------------------------------------------------
+			//Confirm the guess is a letter, and that it is not a duplicate
+			var checkGuess = function(guess){
+				duplicateGuess = false;
+				for (i=0; i<26; i++){
+					if (guess === alphabet[i]){
+						for (var l=0; l<guessedBank.length; l++){
+								if (guess === guessedBank[l]){
+									document.querySelector(".redo").innerHTML = "You have already guessed: " + guess;
+									console.log("already there");
+									duplicateGuess = true;
+									break;
+									}
+								}
+								if (duplicateGuess === false){
+								guessedBank.push(guess);
+								currentGuess=guess;
+								}
+							}
+						}
+					}
+					//-------------------------------------------------------------
+					//Checks to see if the guess matches any of the letters in the word
+					var correct = false;
+
+					var correctGuess = function(){
+						correct = false;
+						for (i=0; i < currentWord.length; i++){
+							if (currentGuess == currentWord[i]){
+								guessedArray[i] = currentGuess;
+								correct = true;
+							}
+						}
+						if (!correct){
+							lives--;
+						}
+					}
+					//-------------------------------------------------------------
+					//check to see if the player wins
+					var checkWin = function(){
+						if (JSON.stringify(wordArray)==JSON.stringify(guessedArray)){
+							startGame = true;
+							win++;
+							document.querySelector(".finalMessage").innerHTML = "You win!" + "</br>" + "Press any letter to start again.";
+						}
+					}
+					//-------------------------------------------------------------
+					//check to see if the player loses
+					var checkLose = function(){
+						if (lives===0){
+							startGame = true;
+							lose++;
+							document.querySelector(".finalMessage").innerHTML = "You lose! The word was " + currentWord + "." + "</br>" + "Press any letter to start again.";
+						}
+					}
+					//-------------------------------------------------------------
+					//When a key is pressed, check several things using the functions above.
+					document.onkeyup = function(event) {
+						//start a new game if a game has just ended
+						if (startGame){
+							newGame();
+						}
+						//makes sure key hit was a lowercase letter, and not already guessed
+						checkGuess(event.key);
+
+						//if the guess is new, then check to see if the letter is in the current word
+						correctGuess();
+
+						//display the word
+						showWord();
+
+						//If all letters are guessed, win and start a new game
+						checkWin();
+
+						//If the player is out of lives, add a loss and start a new game
+						checkLose();
+
+						currentGuess = event.key;
+						console.log(currentGuess);
+					}
+						
+			</script>
+		</body>
+		<html>

@@ -1,0 +1,83 @@
+<DOCTYPE html>
+<html>
+	<head>
+	</head>
+	<body>
+		<h2>Guess the letter</h2>
+		<h3 class="guessed"></h3>
+		<h3 class="redo"></h3>
+		<h2 class ="score">Wins: 0 Loses: 0</h2>
+		<h3 class="lives"> Guesses left: 10</h3>
+		<h1 class="end"></h1>
+		<script type="text/javascript">
+			var alphabet = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
+			var guessed = [];
+			var wins = 0;
+			var loss = 0;
+			var lives = 10;
+			var letter = 'a';
+			var newgame = true;
+			var skiprepeat = false;
+			
+			document.onkeyup = function(event) {
+				//reset last hit key skip
+				skiprepeat = false;
+
+				//check if the game needs to be reset
+				if (newgame === true){
+					letter = alphabet[Math.floor(Math.random()*26)];
+					lives=10;
+					guessed=[];
+					newgame=false;
+					console.log(letter);
+					document.querySelector(".end").innerHTML = "";
+				}
+
+				//make sure key is a letter
+				for (i=0; i<26; i++){
+					if (event.key === alphabet[i]){
+
+						//make sure it isn't a guessed letter
+						for (var l=0; l<guessed.length; l++){
+									if (event.key === guessed[l]){
+										document.querySelector(".redo").innerHTML = "You have already guessed: " + event.key;
+										console.log("already there");
+										skiprepeat = true;
+										break;
+									}
+								}
+
+								//if this is a new letter, check to see if they win, or subtract a life and add to the guessed pool
+								if (!skiprepeat){
+									//matching letter, win
+									if (event.key === letter){
+										wins++;
+										newgame=true;
+										lives = 10;
+										document.querySelector(".end").innerHTML = "You Win!";
+
+									}
+									//missed guess
+									console.log("record");
+									guessed.push(event.key);
+									document.querySelector(".guessed").innerHTML = "You have guessed:" + guessed;
+									lives--;
+									//check for game over
+									if (lives === 0){
+										newgame=true;
+										loss++;
+										lives=10;
+										document.querySelector(".end").innerHTML = "Sorry, you lose.";
+									}
+
+									//record score and lives
+									document.querySelector(".score").innerHTML = "Wins: " + wins + " Losses: " + loss;
+									document.querySelector(".lives").innerHTML = "Lives left: " + lives;
+									break;
+								}
+							}
+						}
+					}
+			</script>
+		</body>
+	</html>
